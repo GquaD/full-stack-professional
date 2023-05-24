@@ -3,7 +3,6 @@ package com.amigoscode;
 import com.amigoscode.customer.Customer;
 import com.amigoscode.customer.CustomerRepository;
 import com.amigoscode.customer.Gender;
-import com.amigoscode.s3.S3Buckets;
 import com.amigoscode.s3.S3Service;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
@@ -21,32 +20,31 @@ public class Main {
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
+
+
     }
 
     @Bean
     CommandLineRunner runner(
             CustomerRepository customerRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            S3Service s3Service) {
         return args -> {
-            createRandomCustomer(customerRepository, passwordEncoder);
-            // testBucketUploadAndDownload(s3Service, s3Buckets);
+            String bucketName = "fs-amigoscode-customer-test-bekhzod";
+            String key = "foo";
+            //createRandomCustomer(customerRepository, passwordEncoder);
+            s3Service.putObject(
+                    bucketName,
+                    key,
+                    "Hello world".getBytes()
+            );
+            byte[] object = s3Service.getObject(
+                    bucketName,
+                    key
+            );
+
+            System.out.println("Hooray: " + new String(object));
         };
-    }
-
-    private static void testBucketUploadAndDownload(S3Service s3Service,
-                                                    S3Buckets s3Buckets) {
-        s3Service.putObject(
-                s3Buckets.getCustomer(),
-                "foo/bar/jamila",
-                "Hello World".getBytes()
-        );
-
-        byte[] obj = s3Service.getObject(
-                s3Buckets.getCustomer(),
-                "foo/bar/jamila"
-        );
-
-        System.out.println("Hooray: " + new String(obj));
     }
 
     private static void createRandomCustomer(CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {

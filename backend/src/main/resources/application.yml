@@ -22,6 +22,9 @@ management:
       exposure:
         include: "health,info"
 
+aws:
+  region: us-east-2
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5332/customer
