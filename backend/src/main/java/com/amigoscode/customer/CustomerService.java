@@ -7,6 +7,7 @@ import com.amigoscode.s3.S3Buckets;
 import com.amigoscode.s3.S3Service;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,8 @@ public class CustomerService {
     private final PasswordEncoder passwordEncoder;
     private final S3Service s3Service;
     private final S3Buckets s3Buckets;
+//    private final S3Service s3Service;
+//    private final S3Buckets s3Buckets;
 
     public CustomerService(@Qualifier("jdbc") CustomerDao customerDao,
                            CustomerDTOMapper customerDTOMapper,
@@ -135,6 +138,7 @@ public class CustomerService {
         } catch (IOException e) {
             throw new RuntimeException("failed to upload profile image", e);
         }
+        //todo: Store profileImageId to db
         customerDao.updateCustomerProfileImageId(profileImageId, customerId);
     }
 
@@ -144,7 +148,7 @@ public class CustomerService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "customer with id [%s] not found".formatted(customerId)
                 ));
-
+        //todo: Check if profileImageId is empty or null -> cust does not have image
         if (StringUtils.isBlank(customer.profileImageId())) {
             throw new ResourceNotFoundException(
                     "customer with id [%s] profile image not found".formatted(customerId));
@@ -156,5 +160,41 @@ public class CustomerService {
         );
         return profileImage;
     }
+
+
+//    public void uploadCustomerProfileImage(Integer customerId,
+//                                           MultipartFile file) {
+//        checkIfCustomerExistsOrThrow(customerId);
+//        String profileImageId = UUID.randomUUID().toString();
+//        try {
+//            s3Service.putObject(
+//                    s3Buckets.getCustomer(),
+//                    "profile-images/%s/%s".formatted(customerId, profileImageId),
+//                    file.getBytes()
+//            );
+//        } catch (IOException e) {
+//            throw new RuntimeException("failed to upload profile image", e);
+//        }
+//        customerDao.updateCustomerProfileImageId(profileImageId, customerId);
+//    }
+//
+//    public byte[] getCustomerProfileImage(Integer customerId) {
+//        var customer = customerDao.selectCustomerById(customerId)
+//                .map(customerDTOMapper)
+//                .orElseThrow(() -> new ResourceNotFoundException(
+//                        "customer with id [%s] not found".formatted(customerId)
+//                ));
+//
+//        if (StringUtils.isBlank(customer.profileImageId())) {
+//            throw new ResourceNotFoundException(
+//                    "customer with id [%s] profile image not found".formatted(customerId));
+//        }
+//
+//        byte[] profileImage = s3Service.getObject(
+//                s3Buckets.getCustomer(),
+//                "profile-images/%s/%s".formatted(customerId, customer.profileImageId())
+//        );
+//        return profileImage;
+//    }
 }
 

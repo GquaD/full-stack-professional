@@ -9,12 +9,12 @@ cors:
   allowed-headers: "*"
   exposed-headers: "*"
 
-aws:
-  region: eu-west-1
-  s3:
-    mock: true
-    buckets:
-      customer: fs-amigoscode-customer-test
+#aws:
+#  region: eu-west-1
+#  s3:
+#    mock: true
+#    buckets:
+#      customer: fs-amigoscode-customer-test
 
 management:
   endpoints:
@@ -24,6 +24,10 @@ management:
 
 aws:
   region: us-east-2
+  s3:
+    mock: true
+    buckets:
+      customer: fs-amigoscode-customer-test-bekhzod
 
 spring:
   datasource:

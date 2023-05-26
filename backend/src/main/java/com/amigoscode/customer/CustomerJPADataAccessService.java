@@ -63,4 +63,11 @@ public class CustomerJPADataAccessService implements CustomerDao {
         customerRepository.updateProfileImageId(profileImageId, customerId);
     }
 
+
+/*    @Override
+    public void updateCustomerProfileImageId(String profileImageId,
+                                             Integer customerId) {
+        customerRepository.updateProfileImageId(profileImageId, customerId);
+    }*/
+
 }

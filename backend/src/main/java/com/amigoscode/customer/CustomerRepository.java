@@ -17,4 +17,8 @@ public interface CustomerRepository
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Customer c SET c.profileImageId = ?1 WHERE c.id = ?2")
     int updateProfileImageId(String profileImageId, Integer customerId);
+
+    /*@Modifying(clearAutomatically = true)
+    @Query("UPDATE Customer c SET c.profileImageId = ?1 WHERE c.id = ?2")
+    int updateProfileImageId(String profileImageId, Integer customerId);*/
 }
